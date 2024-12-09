@@ -9,7 +9,7 @@
 <body>
     <div class="register-container">
         <h1>Registro</h1>
-        <form action="#" method="post">
+        <form id="registerForm" onsubmit="handleRegister(event)">
             <div class="form-row">
                 <div class="form-column">
                     <label for="dni">DNI</label>
@@ -30,7 +30,6 @@
                     <input type="date" id="fecha-nacimiento" name="fecha-nacimiento" required>
                 </div>
             </div>
-            
             <div class="form-row">
                 <div class="form-column">
                     <label for="email">Correo Electrónico</label>
@@ -47,5 +46,56 @@
             <p>¿Ya tienes una cuenta? <a href="login.html">Inicia sesión</a></p>
         </div>
     </div>
+
+    <script>
+        // Manejar el envío del formulario
+        async function handleRegister(event) {
+            event.preventDefault(); // Evitar el envío automático del formulario
+
+            // Obtener los valores del formulario
+            const dni = document.getElementById('dni').value.trim();
+            const digitoVerificador = document.getElementById('digito-verificador').value.trim();
+            const telefono = document.getElementById('telefono').value.trim();
+            const fechaNacimiento = document.getElementById('fecha-nacimiento').value;
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            // Construir el objeto para enviar al backend
+            const registerData = {
+                numeroDocumento: dni,
+                digitoVerificador: digitoVerificador,
+                direccion: "Dirección no especificada", // O agregar un campo de dirección si lo deseas
+                telefono: telefono,
+                correo: email,
+                fechaNacimiento: fechaNacimiento,
+                contraseña: password
+            };
+
+            try {
+                const response = await fetch('http://localhost:8080/api/clients/signin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer apis-token-12136.7f9L2hIXwuybky67dQKJmuSd77VVj069' // Token de la API
+                    },
+                    body: JSON.stringify(registerData),
+                });
+
+                if (response.ok) {
+                    const message = await response.text();
+                    alert(message); // Mostrar mensaje de éxito
+                    window.location.href = 'login.html'; // Redirigir al login después del registro
+                } else if (response.status === 400) {
+                    const errorMessage = await response.text();
+                    alert(`Error: ${errorMessage}`); // Mostrar el error de validación
+                } else {
+                    throw new Error('Hubo un error al registrar el cliente.');
+                }
+            } catch (error) {
+                console.error('Error al intentar registrar al cliente:', error);
+                alert('Hubo un problema con el registro. Inténtalo de nuevo más tarde.');
+            }
+        }
+    </script>
 </body>
 </html>

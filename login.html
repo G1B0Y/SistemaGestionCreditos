@@ -107,6 +107,9 @@
 
                 if (response.ok) {
                     const data = await response.json();
+                    // Almacenar el idUsuario en sessionStorage
+                    sessionStorage.setItem('idUsuario', data.idUsuario);
+
                     // Redirigir según el tipo de usuario
                     if (data.tipo === 'Cliente') {
                         window.location.href = 'user/userhome.html'; // Ruta corregida para clientes
