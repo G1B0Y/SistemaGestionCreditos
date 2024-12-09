@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -76,7 +76,7 @@
         }
 
         // Manejar el evento del formulario
-        function handleLogin(event) {
+        async function handleLogin(event) {
             event.preventDefault(); // Evitar que se envíe el formulario automáticamente
 
             // Validar DNI
@@ -90,15 +90,37 @@
             const dni = document.getElementById('dni').value.trim();
             const password = document.getElementById('password').value.trim();
 
-            // Redirigir a diferentes rutas dependiendo de las credenciales
-            if (dni === '12345678' && password === 'admin123') {
-                // Redirigir a la ruta de administrador
-                window.location.href = 'admin-dashboard.html';
-            } else if (dni === '87654321' && password === 'user123') {
-                // Redirigir a la ruta de usuario
-                window.location.href = '';
-            } else {
-                alert('Credenciales incorrectas. Por favor, verifica tu DNI y contraseña.');
+            // Construir el objeto para enviar al backend
+            const loginData = {
+                numeroDocumento: dni,
+                contraseña: password
+            };
+
+            try {
+                const response = await fetch('http://localhost:8080/Inicio/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(loginData),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    // Redirigir según el tipo de usuario
+                    if (data.tipo === 'Cliente') {
+                        window.location.href = 'user/userhome.html'; // Ruta corregida para clientes
+                    } else if (data.tipo === 'Administrador') {
+                        window.location.href = 'admin/adminhome.html'; // Ruta corregida para administradores
+                    }
+                } else {
+                    const error = await response.text();
+                    console.error('Error en el backend:', error);  // Imprime el mensaje de error
+                    alert('Credenciales incorrectas. Por favor, verifica tu DNI y contraseña.');
+                }
+            } catch (error) {
+                console.error('Error al intentar iniciar sesión:', error);
+                alert('Hubo un error al procesar la solicitud. Intenta de nuevo más tarde.');
             }
         }
 
