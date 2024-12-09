@@ -808,3 +808,80 @@ ul{
     color: #24262b;
     background-color: #ffffff;
 }
+   /* Estilos generales */
+   body {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Estilos del popup modal */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro semitransparente */
+}
+
+.modal-content {
+    background-color: #2b2b38;
+    color: #d2d2d2;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    font-size: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.modal-body input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #b3b3b3;
+    border-radius: 5px;
+    background-color: #131419;
+    color: #d2d2d2;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.modal-footer button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.modal-footer .cancel-btn {
+    background-color: #b3b3b3;
+    color: #2b2b38;
+}
+
+.modal-footer .send-btn {
+    background-color: #3489db;
+    color: white;
+}
+
+.modal-footer button:hover {
+    opacity: 0.9;
+}
