@@ -29,7 +29,7 @@ header {
     align-items: center;
     justify-content: space-between;
     height: 63px;
-    background: #ae0001;
+    background: #333;
     position: fixed;
     width: 100%;
     z-index: 100;
@@ -63,7 +63,7 @@ header {
 }
 
 .navbar a:hover{
-    background: #eeba30;
+    background: rgb(78, 84, 177);
 }
 
 /* Estilo de fondo para el encabezado de la sección de inicio */
@@ -497,7 +497,7 @@ td.empty {
     font-size: 18px;
     color: #fff;
     padding: 10px;
-    background: #eeba30;
+    background: #3838f2;
     border-radius: 5px;
 }
 
