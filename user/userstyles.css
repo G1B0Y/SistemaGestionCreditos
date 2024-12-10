@@ -885,20 +885,51 @@ body > *:not(footer) {
     box-sizing: border-box; /* Asegura que el padding no afecte el tamaño total */
 }
 
+/* Configuración del body para manejar el diseño dinámico */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding-top: 63px; /* Altura del menú de navegación */
+    padding-bottom: 100px; /* Espaciado para el footer */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* Contenedor principal del contenido */
+.main-content {
+    flex-grow: 1; /* Permite que el contenido crezca dinámicamente */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 20px 0;
+}
+
+/* Contenedor de la tabla */
+.table-container {
+    width: 90%; /* Ajusta el tamaño para pantallas más pequeñas */
+    max-width: 1200px; /* Tamaño máximo para la tabla */
+    overflow-x: auto; /* Permite desplazamiento horizontal si es necesario */
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    border-radius: 8px;
+}
+
 /* Tabla responsiva */
 table {
+    width: 100%;
     border-collapse: collapse;
-    width: 90%; /* Asegura un tamaño adecuado en pantallas pequeñas */
-    text-align: left;
-    font-family: Arial, sans-serif;
-    margin-bottom: 20px; /* Añade un poco de espacio inferior */
+    margin-bottom: 20px; /* Espaciado inferior */
 }
 
 th, td {
     border: 1px solid #ddd;
     padding: 8px;
-    word-wrap: break-word; /* Evita que el texto se salga de las celdas */
     text-align: center;
+    word-wrap: break-word; /* Evita que el texto se salga de las celdas */
 }
 
 th {
@@ -910,15 +941,28 @@ tr:hover {
     background-color: #f1f1f1;
 }
 
-/* Contenedor que crece dinámicamente con la tabla */
-body {
-    font-family: 'Poppins', sans-serif;
-    min-height: 100%; /* Permite que el contenido haga crecer la página */
-    margin: 0;
-    display: flex;
-    flex-direction: column;
+/* Footer fijo al final si no hay suficiente contenido */
+.footer {
+    background-color: #24262b;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    width: 100%;
+    margin-top: auto; /* Permite que el footer se desplace con el contenido */
 }
 
-body > *:not(footer) {
-    flex-grow: 1; /* Asegura que el contenido crezca antes que el footer */
+/* Asegura que el menú no solape el contenido */
+.head {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background: #333;
+    height: 63px; /* Altura del menú */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
