@@ -748,10 +748,24 @@ body{
 ul{
     list-style: none;
 }
+
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Asegura que el contenido principal crezca para ocupar el espacio disponible */
+body > *:not(footer) {
+    flex: 1;
+}
+
 .footer{
     background-color: #24262b;
     padding: 70px 0;
     text-align: left;
+    margin-top: auto;
 }
 .footer-col{
     width: 25%;
@@ -809,7 +823,7 @@ ul{
     background-color: #ffffff;
 }
    /* Estilos generales */
-   body {
+    body {
     font-family: 'Poppins', sans-serif;
 }
 
