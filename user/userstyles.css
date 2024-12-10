@@ -247,31 +247,6 @@ p {
     color: #9c27b0;
 }
 
-
-/* Sección "Contacto" */
-.contact {
-    width: 100vw;
-    padding: 50px 20px;
-    background: #1f1d1d; /* Fondo sólido */
-    text-align: center;
-    box-sizing: border-box;
-    margin-left: calc((100% - 100vw) / 2);
-    margin-top: 50px;
-    border-radius: 10px; /* Bordes redondeados */
-}
-
-.contact .title {
-    font-size: 2rem;
-    color: #fff;
-    margin-bottom: 20px;
-}
-
-.contact .numbers {
-    color: #fff;
-    font-size: 1rem;
-    margin: 20px;
-}
-
 /* Estilos específicos para tableavailability */
 
 body.tableavailability {
@@ -898,4 +873,52 @@ body > *:not(footer) {
 
 .modal-footer button:hover {
     opacity: 0.9;
+}
+
+.table-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh; /* Asegura una altura mínima para el contenedor */
+    margin: 20px 0; /* Espaciado para evitar que se superponga con otros elementos */
+    padding: 10px;
+    box-sizing: border-box; /* Asegura que el padding no afecte el tamaño total */
+}
+
+/* Tabla responsiva */
+table {
+    border-collapse: collapse;
+    width: 90%; /* Asegura un tamaño adecuado en pantallas pequeñas */
+    text-align: left;
+    font-family: Arial, sans-serif;
+    margin-bottom: 20px; /* Añade un poco de espacio inferior */
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    word-wrap: break-word; /* Evita que el texto se salga de las celdas */
+    text-align: center;
+}
+
+th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Contenedor que crece dinámicamente con la tabla */
+body {
+    font-family: 'Poppins', sans-serif;
+    min-height: 100%; /* Permite que el contenido haga crecer la página */
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+body > *:not(footer) {
+    flex-grow: 1; /* Asegura que el contenido crezca antes que el footer */
 }
