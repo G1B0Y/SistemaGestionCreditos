@@ -113,26 +113,8 @@
             <a href="#nosotros" onclick="openModal()">Solicitar Crédito</a>
         </nav>
 
-        <div class="table-container" id="historialContainer" style="display: none;">
-            <table id="historialTable" style="display: none;">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Fecha</th>
-                        <th>Monto</th>
-                        <th>Estado</th>
-                        <th>Tasa</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Las filas se agregarán dinámicamente -->
-                </tbody>
-            </table>
-            <div class="empty-message" id="historialMessage">Cargando historial...</div>
-        </div>
-
         <div class="user-menu">
-            <span class="user-name" onclick="toggleDropdown()">¡Hola Usuario!</span>
+            <span class="user-name" id="userName">¡Hola Usuario!</span>
             <div class="dropdown-menu" id="dropdownMenu">
                 <a href="reservations.html">Mis reservas</a>
                 <a href="useracount.html">Mi Cuenta</a>
@@ -176,7 +158,6 @@
             </div>
         </div>
     </div>
-    
 
     <!-- Scripts -->
     <script>
@@ -189,13 +170,28 @@
                 alert("No se encontró un usuario en la sesión. Redirigiendo al login.");
                 window.location.href = "../login.html";
                 return;
-            }
+            }
 
+            // Obtener el nombre del usuario
+            try {
+                const userResponse = await fetch(`http://localhost:8080/usuarios/datos/${idCliente}`);
+                if (userResponse.ok) {
+                    const userData = await userResponse.json();
+                    const userName = document.getElementById("userName");
+                    userName.textContent = `¡Hola ${userData.nombres}!`;
+                } else {
+                    throw new Error("No se pudo obtener el nombre del usuario.");
+                }
+            } catch (error) {
+                console.error("Error al cargar los datos del usuario:", error);
+            }
+
+            // Obtener las solicitudes pendientes
             try {
                 const response = await fetch(`http://localhost:8080/clientes/solicitudes-pendientes?idCliente=${idCliente}`);
                 if (response.ok) {
                     const solicitudes = await response.json();
-                    
+
                     if (solicitudes.length > 0) {
                         const tbody = table.querySelector("tbody");
 
@@ -225,17 +221,15 @@
             }
         });
 
-        // Función para abrir el modal
+        // Funciones del modal
         function openModal() {
             document.getElementById('creditModal').style.display = 'block';
         }
 
-        // Función para cerrar el modal
         function closeModal() {
             document.getElementById('creditModal').style.display = 'none';
         }
 
-        // Función para manejar el envío del crédito
         function submitCredit() {
             const monto = document.getElementById('monto').value;
             const tasaInteres = document.getElementById('tasaInteres').value;
@@ -251,19 +245,16 @@
             }
 
             alert(`Solicitud enviada con éxito.\nMonto: ${monto}\nTasa de interés: ${tasaInteres}%`);
-            closeModal(); // Cerrar el modal después del envío
+            closeModal();
         }
 
-        // Cerrar el modal al hacer clic fuera del contenido
         window.onclick = function(event) {
             const modal = document.getElementById('creditModal');
             if (event.target === modal) {
                 closeModal();
             }
         };
-        
     </script>
-    
 
 <footer class="footer">
     <div class="contain">
