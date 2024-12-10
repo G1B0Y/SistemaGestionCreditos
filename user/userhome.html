@@ -109,8 +109,27 @@
         </div>
         <nav class="navbar">
             <a href="#inicio">Mis Solicitudes</a>
+            <a href="#historial">Historial de Solicitudes</a>
             <a href="#nosotros" onclick="openModal()">Solicitar Crédito</a>
         </nav>
+
+        <div class="table-container" id="historialContainer" style="display: none;">
+            <table id="historialTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Monto</th>
+                        <th>Estado</th>
+                        <th>Tasa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Las filas se agregarán dinámicamente -->
+                </tbody>
+            </table>
+            <div class="empty-message" id="historialMessage">Cargando historial...</div>
+        </div>
 
         <div class="user-menu">
             <span class="user-name" onclick="toggleDropdown()">¡Hola Usuario!</span>
@@ -169,7 +188,7 @@
                 alert("No se encontró un usuario en la sesión. Redirigiendo al login.");
                 window.location.href = "../login.html";
                 return;
-            }
+            }
 
             try {
                 const response = await fetch(`http://localhost:8080/clientes/solicitudes-pendientes?idCliente=${idCliente}`);
@@ -241,7 +260,42 @@
                 closeModal();
             }
         };
+        
     </script>
+
+    <script>
+        // Función para vaciar todo excepto el nav y el footer
+function mostrarHistorial() {
+    const bodyChildren = Array.from(document.body.children);
+
+    // Mantén solo el nav y el footer
+    bodyChildren.forEach((child) => {
+        if (!child.classList.contains("head") && !child.classList.contains("footer")) {
+            child.remove();
+        }
+    });
+
+    // Agrega contenido nuevo para el historial
+    const contenidoHistorial = document.createElement("div");
+    contenidoHistorial.classList.add("contenido-historial");
+    contenidoHistorial.style.textAlign = "center";
+    contenidoHistorial.style.padding = "20px";
+    contenidoHistorial.innerHTML = `
+        <h1>Historial de Solicitudes</h1>
+        <p>Aquí puedes mostrar el contenido del historial.</p>
+    `;
+    document.body.insertBefore(contenidoHistorial, document.querySelector(".footer"));
+}
+
+// Asigna la función al botón de Historial de Solicitudes
+document.querySelector(".navbar a[href='#historial']").addEventListener("click", (event) => {
+    event.preventDefault(); // Evita el comportamiento predeterminado del enlace
+    mostrarHistorial(); // Llama a la función
+});
+
+    </script>
+
+    
 
 <footer class="footer">
     <div class="contain">
