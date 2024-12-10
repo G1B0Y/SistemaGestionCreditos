@@ -7,14 +7,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link rel="stylesheet" href="userstyles.css">
     <link rel="icon" href="../images/icono.png" type="image/png">
-    <title>User Home</title>
+    <title>User Historial</title>
     <style>
         /* Estilos básicos para centrar la tabla */
         .table-container {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            height: 60vh;
+            margin-top: 20px;
         }
 
         table {
@@ -22,6 +22,7 @@
             width: 80%;
             text-align: left;
             font-family: Arial, sans-serif;
+            margin-bottom: 20px;
         }
 
         th, td {
@@ -44,60 +45,10 @@
             color: #888;
         }
 
-        /* Estilos del modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        .modal-content {
-            background-color: #fff;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 30%;
-            text-align: center;
-        }
-
-        .modal-header {
-            font-size: 18px;
+        .table-title {
+            font-size: 20px;
             font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .modal-body input {
-            width: 90%;
-            margin: 10px 0;
-            padding: 8px;
-        }
-
-        .modal-footer {
-            margin-top: 20px;
-        }
-
-        .cancel-btn, .send-btn {
-            padding: 10px 20px;
-            margin: 5px;
-            cursor: pointer;
-        }
-
-        .cancel-btn {
-            background-color: red;
-            color: white;
-            border: none;
-        }
-
-        .send-btn {
-            background-color: green;
-            color: white;
-            border: none;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -113,26 +64,8 @@
             <a href="#nosotros" onclick="openModal()">Solicitar Crédito</a>
         </nav>
 
-        <div class="table-container" id="historialContainer" style="display: none;">
-            <table id="historialTable" style="display: none;">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Fecha</th>
-                        <th>Monto</th>
-                        <th>Estado</th>
-                        <th>Tasa</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Las filas se agregarán dinámicamente -->
-                </tbody>
-            </table>
-            <div class="empty-message" id="historialMessage">Cargando historial...</div>
-        </div>
-
         <div class="user-menu">
-            <span class="user-name" onclick="toggleDropdown()">¡Hola Usuario!</span>
+            <span class="user-name" id="userName">¡Hola Usuario!</span>
             <div class="dropdown-menu" id="dropdownMenu">
                 <a href="reservations.html">Mis reservas</a>
                 <a href="useracount.html">Mi Cuenta</a>
@@ -141,66 +74,138 @@
         </div>
     </div>
 
-    <!-- Contenido del popup modal -->
-    <div id="creditModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                Solicite su crédito ya
-            </div>
-            <div class="modal-body">
-                <input type="number" id="monto" placeholder="Monto" required>
-                <input type="number" id="tasaInteres" placeholder="Tasa de interés (%)" required>
-            </div>
-            <div class="modal-footer">
-                <button class="cancel-btn" onclick="closeModal()">Cancelar</button>
-                <button class="send-btn" onclick="submitCredit()">Enviar</button>
-            </div>
+    <!-- Contenedor de las tablas -->
+    <div class="table-container">
+        <div>
+            <div class="table-title">Solicitudes Aprobadas</div>
+            <table id="approvedTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha Solicitud</th>
+                        <th>Monto</th>
+                        <th>Fecha Aprobación</th>
+                        <th>Tasa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Filas dinámicas -->
+                </tbody>
+            </table>
+            <div class="empty-message" id="approvedMessage">Cargando solicitudes aprobadas...</div>
+        </div>
+
+        <div>
+            <div class="table-title">Solicitudes Rechazadas</div>
+            <table id="rejectedTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha Solicitud</th>
+                        <th>Monto</th>
+                        <th>Fecha Rechazo</th>
+                        <th>Tasa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Filas dinámicas -->
+                </tbody>
+            </table>
+            <div class="empty-message" id="rejectedMessage">Cargando solicitudes rechazadas...</div>
         </div>
     </div>
 
-
     <!-- Scripts -->
     <script>
-        
-        // Función para abrir el modal
-        function openModal() {
-            document.getElementById('creditModal').style.display = 'block';
-        }
+        document.addEventListener("DOMContentLoaded", async () => {
+            const idCliente = sessionStorage.getItem("idUsuario");
 
-        // Función para cerrar el modal
-        function closeModal() {
-            document.getElementById('creditModal').style.display = 'none';
-        }
-
-        // Función para manejar el envío del crédito
-        function submitCredit() {
-            const monto = document.getElementById('monto').value;
-            const tasaInteres = document.getElementById('tasaInteres').value;
-
-            if (!monto || !tasaInteres) {
-                alert('Por favor complete todos los campos.');
+            if (!idCliente) {
+                alert("No se encontró un usuario en la sesión. Redirigiendo al login.");
+                window.location.href = "../login.html";
                 return;
             }
 
-            if (monto <= 0 || tasaInteres <= 0) {
-                alert('El monto y la tasa de interés deben ser mayores a 0.');
-                return;
+            // Obtener el nombre del usuario
+            try {
+                const userResponse = await fetch(`http://localhost:8080/usuarios/datos/${idCliente}`);
+                if (userResponse.ok) {
+                    const userData = await userResponse.json();
+                    const userName = document.getElementById("userName");
+                    userName.textContent = `¡Hola ${userData.nombres}!`;
+                } else {
+                    throw new Error("No se pudo obtener el nombre del usuario.");
+                }
+            } catch (error) {
+                console.error("Error al cargar los datos del usuario:", error);
             }
 
-            alert(`Solicitud enviada con éxito.\nMonto: ${monto}\nTasa de interés: ${tasaInteres}%`);
-            closeModal(); // Cerrar el modal después del envío
-        }
+            // Obtener el historial de solicitudes
+            try {
+                const response = await fetch(`http://localhost:8080/clientes/historial-solicitudes?idCliente=${idCliente}`);
+                if (response.ok) {
+                    const solicitudes = await response.json();
 
-        // Cerrar el modal al hacer clic fuera del contenido
-        window.onclick = function(event) {
-            const modal = document.getElementById('creditModal');
-            if (event.target === modal) {
-                closeModal();
+                    const approvedTable = document.getElementById("approvedTable");
+                    const approvedMessage = document.getElementById("approvedMessage");
+                    const approvedTbody = approvedTable.querySelector("tbody");
+
+                    const rejectedTable = document.getElementById("rejectedTable");
+                    const rejectedMessage = document.getElementById("rejectedMessage");
+                    const rejectedTbody = rejectedTable.querySelector("tbody");
+
+                    let hasApproved = false;
+                    let hasRejected = false;
+
+                    solicitudes.forEach((solicitud) => {
+                        if (solicitud.estadoSolicitud === "Aprobado") {
+                            const row = document.createElement("tr");
+                            row.innerHTML = `
+                                <td>${solicitud.idSolicitud}</td>
+                                <td>${new Date(solicitud.fechaSolicitud).toLocaleDateString()}</td>
+                                <td>${solicitud.montoSolicitado.toFixed(2)}</td>
+                                <td>${new Date(solicitud.fechaAprobacion).toLocaleDateString()}</td>
+                                <td>${solicitud.tasaInteres.toFixed(2)}%</td>
+                            `;
+                            approvedTbody.appendChild(row);
+                            hasApproved = true;
+                        } else if (solicitud.estadoSolicitud === "Rechazado") {
+                            const row = document.createElement("tr");
+                            row.innerHTML = `
+                                <td>${solicitud.idSolicitud}</td>
+                                <td>${new Date(solicitud.fechaSolicitud).toLocaleDateString()}</td>
+                                <td>${solicitud.montoSolicitado.toFixed(2)}</td>
+                                <td>${new Date(solicitud.fechaRechazo).toLocaleDateString()}</td>
+                                <td>${solicitud.tasaInteres.toFixed(2)}%</td>
+                            `;
+                            rejectedTbody.appendChild(row);
+                            hasRejected = true;
+                        }
+                    });
+
+                    if (hasApproved) {
+                        approvedTable.style.display = "table";
+                        approvedMessage.style.display = "none";
+                    } else {
+                        approvedMessage.textContent = "No se encontraron solicitudes aprobadas.";
+                    }
+
+                    if (hasRejected) {
+                        rejectedTable.style.display = "table";
+                        rejectedMessage.style.display = "none";
+                    } else {
+                        rejectedMessage.textContent = "No se encontraron solicitudes rechazadas.";
+                    }
+                } else {
+                    throw new Error("Error al obtener el historial de solicitudes.");
+                }
+            } catch (error) {
+                console.error("Error al cargar el historial de solicitudes:", error);
+                document.getElementById("approvedMessage").textContent = "Hubo un problema al cargar las solicitudes aprobadas.";
+                document.getElementById("rejectedMessage").textContent = "Hubo un problema al cargar las solicitudes rechazadas.";
             }
-        };
-        
+        });
     </script>
-    
 
 <footer class="footer">
     <div class="contain">
