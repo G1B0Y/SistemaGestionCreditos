@@ -141,6 +141,23 @@
         </div>
     </div>
 
+    <!-- Contenido del popup modal -->
+    <div id="creditModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                Solicite su crédito ya
+            </div>
+            <div class="modal-body">
+                <input type="number" id="monto" placeholder="Monto" required>
+                <input type="number" id="tasaInteres" placeholder="Tasa de interés (%)" required>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" onclick="closeModal()">Cancelar</button>
+                <button class="send-btn" onclick="submitCredit()">Enviar</button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Scripts -->
     <script>
