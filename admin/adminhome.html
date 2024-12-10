@@ -133,7 +133,7 @@
             <a href="#inicio">Solicitudes</a>
         </nav>
         <div class="user-menu">
-            <span class="user-name" id="adminName">¡Hola Admin!</span>
+            <span class="user-name" id="adminName" onclick="toggleDropdown()">¡Hola Admin!</span>
             <div class="dropdown-menu" id="dropdownMenu">
                 <a href="adminacount.html">Mi Cuenta</a>
                 <a href="../index.html">Cerrar Sesión</a>
@@ -175,6 +175,23 @@
             <button onclick="closeRejectModal()">Cancelar</button>
         </div>
     </div>
+
+    <script>
+        function toggleDropdown() {
+            const dropdown = document.getElementById("dropdownMenu");
+            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        }
+    
+        // Cierra el menú si haces clic fuera de él
+        window.onclick = function(event) {
+            if (!event.target.matches('.user-name')) {
+                const dropdown = document.getElementById("dropdownMenu");
+                if (dropdown.style.display === "block") {
+                    dropdown.style.display = "none";
+                }
+            }
+        };
+    </script>
 
     <script>
         let currentRejectId = null; // Para almacenar el ID de la solicitud que se va a rechazar
