@@ -2,18 +2,129 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Parkinsans:wght@300..800&family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-    <link rel="stylesheet" href="adminstyles.css"> 
+    <link rel="stylesheet" href="adminstyles.css">
     <link rel="icon" href="../images/icono.png" type="image/png">
     <title>Admin Home</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            width: 50%;
+        }
+
+        .close-btn {
+            color: red;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-btn:hover, .close-btn:focus {
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-buttons button {
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .approve-btn {
+            background-color: green;
+            color: white;
+        }
+
+        .reject-btn {
+            background-color: red;
+            color: white;
+        }
+
+        .reject-modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .reject-modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            width: 40%;
+            text-align: center;
+        }
+
+        .reject-modal textarea {
+            width: 90%;
+            height: 80px;
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .reject-modal button {
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .reject-modal .reject-confirm {
+            background-color: red;
+            color: white;
+        }
+    </style>
 </head>
 <body>
-    <!-- Barra de navegación -->
     <div class="head">
         <div class="logo">
             <a href="#">Logo</a>
@@ -21,7 +132,6 @@
         <nav class="navbar">
             <a href="#inicio">Solicitudes</a>
         </nav>
-        <!-- Menú de Usuario -->
         <div class="user-menu">
             <span class="user-name" id="adminName">¡Hola Admin!</span>
             <div class="dropdown-menu" id="dropdownMenu">
@@ -31,51 +141,46 @@
         </div>
     </div>
 
-    <!-- Sección de Inicio -->
-    
+    <div class="table-container">
+        <table id="clientTable">
+            <thead>
+                <tr>
+                    <th>ID Cliente</th>
+                    <th>Nombre Completo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Las filas se llenarán dinámicamente -->
+            </tbody>
+        </table>
+    </div>
 
-    <!-- Sección de Contacto -->
-    <footer class="footer">
-        <div class="contain">
-            <div class="row">
-                <div class="footer-col">
-                    <h4>Informacion Institucional</h4>
-                    <ul>
-                        <li><a href="#">Museo de la Identificacion</a></li>
-                        <li><a href="#">Estadisticas</a></li>
-                        <li><a href="#">Datos Abiertos</a></li>
-                        <li><a href="#">Sistema de Control Interno</a></li>
-                        <li><a href="#">Registro Electoral</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Informacion al Cliente</h4>
-                    <ul>
-                        <li><a href="#">Preguntas Frecuentes</a></li>
-                        <li><a href="#">Politicas de Privacidad</a></li>
-                        <li><a href="#">Terminos y Condiciones</a></li>
-                        <li><a href="#">Horarios y Oficinas</a></li>
-                        <li><a href="#">Lugares de Pago</a></li>
-                        <li><a href="#">Carta de Servicios</a></li>
-                        <li><a href="#">Libro de Reclamaciones</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Mi Cuenta</h4>
-                    <ul>
-                        <li><a href="#">Mis Datos Digitales</a></li>
-                        <li><a href="#">Mis Direcciones</a></li>
-                        <li><a href="#">Mis Pagos</a></li>
-                    </ul>
-                </div>
-                
+    <!-- Modal para mostrar las solicitudes del cliente -->
+    <div id="clientModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2>Solicitudes del Cliente</h2>
+            <div id="modalContent">
+                <!-- Aquí se cargarán las solicitudes del cliente -->
             </div>
         </div>
-    </footer>
+    </div>
+
+    <!-- Modal para rechazar una solicitud -->
+    <div id="rejectModal" class="reject-modal">
+        <div class="reject-modal-content">
+            <h3>Motivo de Rechazo</h3>
+            <textarea id="rejectReason" placeholder="Escribe el motivo del rechazo..."></textarea>
+            <button class="reject-confirm" onclick="confirmReject()">Rechazar</button>
+            <button onclick="closeRejectModal()">Cancelar</button>
+        </div>
+    </div>
 
     <script>
+        let currentRejectId = null; // Para almacenar el ID de la solicitud que se va a rechazar
+
         document.addEventListener("DOMContentLoaded", async () => {
-            const idAdmin = sessionStorage.getItem("idUsuario"); // Obtener el ID del administrador desde la sesión
+            const idAdmin = sessionStorage.getItem("idUsuario");
 
             if (!idAdmin) {
                 alert("No se encontró un administrador en la sesión. Redirigiendo al login.");
@@ -96,20 +201,170 @@
             } catch (error) {
                 console.error("Error al cargar los datos del administrador:", error);
             }
+
+            // Cargar la tabla de clientes
+            try {
+                const clientResponse = await fetch("http://localhost:8080/admin/solicitudes-clientes");
+                if (clientResponse.ok) {
+                    const clientData = await clientResponse.json();
+                    const tableBody = document.getElementById("clientTable").querySelector("tbody");
+
+                    // Evitar duplicados mostrando cada cliente una sola vez
+                    const uniqueClients = new Map();
+                    clientData.forEach(client => {
+                        if (!uniqueClients.has(client.idCliente)) {
+                            uniqueClients.set(client.idCliente, client);
+                        }
+                    });
+
+                    uniqueClients.forEach(client => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td>${client.idCliente}</td>
+                            <td><a href="#" onclick="showClientModal('${client.idCliente}')">${client.nombres} ${client.apellidoPaterno} ${client.apellidoMaterno}</a></td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                } else {
+                    throw new Error("Error al cargar los datos de los clientes.");
+                }
+            } catch (error) {
+                console.error("Error al cargar la tabla de clientes:", error);
+            }
         });
 
-        function toggleDropdown() {
-            var dropdown = document.getElementById("dropdownMenu");
-            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        async function showClientModal(clientId) {
+            const modal = document.getElementById("clientModal");
+            const modalContent = document.getElementById("modalContent");
+            modal.style.display = "block";
+
+            // Cargar solicitudes del cliente
+            try {
+                const response = await fetch(`http://localhost:8080/clientes/solicitudes-pendientes?idCliente=${clientId}`);
+                if (response.ok) {
+                    const solicitudes = await response.json();
+                    let contentHtml = `
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Fecha Solicitud</th>
+                                    <th>Monto Solicitado</th>
+                                    <th>Tasa Interés</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+
+                    solicitudes.forEach(solicitud => {
+                        contentHtml += `
+                            <tr>
+                                <td>${solicitud.fechaSolicitud}</td>
+                                <td>${solicitud.montoSolicitado}</td>
+                                <td>${solicitud.tasaInteres}%</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="approve-btn" onclick="approveRequest('${solicitud.idSolicitud}')">✔</button>
+                                        <button class="reject-btn" onclick="openRejectModal('${solicitud.idSolicitud}')">✖</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    });
+
+                    contentHtml += `</tbody></table>`;
+                    modalContent.innerHTML = contentHtml;
+                } else {
+                    modalContent.innerHTML = "<p>Error al cargar las solicitudes del cliente.</p>";
+                }
+            } catch (error) {
+                console.error("Error al cargar las solicitudes del cliente:", error);
+                modalContent.innerHTML = "<p>Error al cargar las solicitudes del cliente.</p>";
+            }
         }
 
-        // Cerrar el menú si se hace clic fuera de él
+        function approveRequest(idSolicitud) {
+            const payload = {
+                idSolicitud: idSolicitud,
+                estadoSolicitud: "Aprobado",
+                fechaAprobacion: new Date().toISOString(),
+                fechaRechazo: null
+            };
+
+            fetch("http://localhost:8080/admin/actualizar-estado-solicitud", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Solicitud aprobada con éxito.");
+                        showClientModal(payload.idSolicitud);
+                    } else {
+                        alert("Error al aprobar la solicitud.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error al aprobar la solicitud:", error);
+                    alert("Error al procesar la aprobación.");
+                });
+        }
+
+        function openRejectModal(idSolicitud) {
+            currentRejectId = idSolicitud;
+            document.getElementById("rejectModal").style.display = "block";
+        }
+
+        function closeRejectModal() {
+            currentRejectId = null;
+            document.getElementById("rejectModal").style.display = "none";
+        }
+
+        function confirmReject() {
+            const motivoRechazo = document.getElementById("rejectReason").value;
+
+            if (!motivoRechazo.trim()) {
+                alert("Por favor, escribe un motivo para el rechazo.");
+                return;
+            }
+
+            const payload = {
+                idSolicitud: currentRejectId,
+                estadoSolicitud: "Rechazado",
+                fechaAprobacion: null,
+                fechaRechazo: new Date().toISOString(),
+                motivoRechazo: motivoRechazo
+            };
+
+            fetch("http://localhost:8080/admin/actualizar-estado-solicitud", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Solicitud rechazada con éxito.");
+                        closeRejectModal();
+                        showClientModal(payload.idSolicitud);
+                    } else {
+                        alert("Error al rechazar la solicitud.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error al rechazar la solicitud:", error);
+                    alert("Error al procesar el rechazo.");
+                });
+        }
+
+        function closeModal() {
+            const modal = document.getElementById("clientModal");
+            modal.style.display = "none";
+        }
+
         window.onclick = function(event) {
-            if (!event.target.matches('.user-name')) {
-                var dropdown = document.getElementById("dropdownMenu");
-                if (dropdown.style.display === "block") {
-                    dropdown.style.display = "none";
-                }
+            const modal = document.getElementById("clientModal");
+            if (event.target === modal) {
+                closeModal();
             }
         };
     </script>
