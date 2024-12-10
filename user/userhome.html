@@ -8,6 +8,42 @@
     <link rel="stylesheet" href="userstyles.css">
     <link rel="icon" href="../images/icono.png" type="image/png">
     <title>User Home</title>
+    <style>
+        /* Estilos básicos para centrar la tabla */
+        .table-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 60vh; /* Ajusta según sea necesario */
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            text-align: left;
+            font-family: Arial, sans-serif;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .empty-message {
+            text-align: center;
+            font-size: 18px;
+            color: #888;
+        }
+    </style>
 </head>
 <body>
     <!-- Barra de navegación -->
@@ -28,64 +64,75 @@
                 <a href="../index.html">Cerrar Sesión</a>
             </div>
         </div>
-        
     </div>
 
-    <!-- Contenido del popup modal -->
-    <div id="creditModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                Solicite su crédito ya
-            </div>
-            <div class="modal-body">
-                <input type="number" id="monto" placeholder="Monto" required>
-                <input type="number" id="tasaInteres" placeholder="Tasa de interés (%)" required>
-            </div>
-            <div class="modal-footer">
-                <button class="cancel-btn" onclick="closeModal()">Cancelar</button>
-                <button class="send-btn" onclick="submitCredit()">Enviar</button>
-            </div>
-        </div>
+    <!-- Contenedor de la tabla -->
+    <div class="table-container">
+        <table id="solicitudesTable" style="display: none;">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Fecha</th>
+                    <th>Monto</th>
+                    <th>Estado</th>
+                    <th>Tasa</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Las filas se agregarán dinámicamente -->
+            </tbody>
+        </table>
+        <div class="empty-message" id="emptyMessage">Cargando solicitudes...</div>
     </div>
 
     <!-- Scripts -->
     <script>
-        // Función para abrir el modal
-        function openModal() {
-            document.getElementById('creditModal').style.display = 'block';
-        }
+        document.addEventListener("DOMContentLoaded", async () => {
+            const idCliente = sessionStorage.getItem("idUsuario"); // Obtener idCliente de la sesión
+            const table = document.getElementById("solicitudesTable");
+            const emptyMessage = document.getElementById("emptyMessage");
 
-        // Función para cerrar el modal
-        function closeModal() {
-            document.getElementById('creditModal').style.display = 'none';
-        }
-
-        // Función para manejar el envío del crédito
-        function submitCredit() {
-            const monto = document.getElementById('monto').value;
-            const tasaInteres = document.getElementById('tasaInteres').value;
-
-            if (!monto || !tasaInteres) {
-                alert('Por favor complete todos los campos.');
+            if (!idCliente) {
+                alert("No se encontró un usuario en la sesión. Redirigiendo al login.");
+                window.location.href = "../login.html";
                 return;
             }
 
-            if (monto <= 0 || tasaInteres <= 0) {
-                alert('El monto y la tasa de interés deben ser mayores a 0.');
-                return;
-            }
+            try {
+                // Hacer la solicitud al backend
+                const response = await fetch(`http://localhost:8080/clientes/solicitudes-pendientes?idCliente=${idCliente}`);
+                if (response.ok) {
+                    const solicitudes = await response.json();
+                    
+                    // Si hay solicitudes, agregarlas a la tabla
+                    if (solicitudes.length > 0) {
+                        const tbody = table.querySelector("tbody");
 
-            alert(`Solicitud enviada con éxito.\nMonto: ${monto}\nTasa de interés: ${tasaInteres}%`);
-            closeModal(); // Cerrar el modal después del envío
-        }
+                        solicitudes.forEach((solicitud) => {
+                            const row = document.createElement("tr");
+                            row.innerHTML = `
+                                <td>${solicitud.idSolicitud}</td>
+                                <td>${new Date(solicitud.fechaSolicitud).toLocaleDateString()}</td>
+                                <td>${solicitud.montoSolicitado.toFixed(2)}</td>
+                                <td>${solicitud.estadoSolicitud}</td>
+                                <td>${solicitud.tasaInteres.toFixed(2)}%</td>
+                            `;
+                            tbody.appendChild(row);
+                        });
 
-        // Cerrar el modal al hacer clic fuera del contenido
-        window.onclick = function(event) {
-            const modal = document.getElementById('creditModal');
-            if (event.target === modal) {
-                closeModal();
+                        table.style.display = "table"; // Mostrar la tabla
+                        emptyMessage.style.display = "none"; // Ocultar mensaje vacío
+                    } else {
+                        emptyMessage.textContent = "No se encontraron solicitudes pendientes.";
+                    }
+                } else {
+                    throw new Error("Error al obtener las solicitudes.");
+                }
+            } catch (error) {
+                console.error("Error al cargar las solicitudes:", error);
+                emptyMessage.textContent = "Hubo un problema al cargar las solicitudes. Intenta de nuevo más tarde.";
             }
-        };
+        });
     </script>
 
 <footer class="footer">
@@ -121,7 +168,6 @@
                     <li><a href="#">Mis Pagos</a></li>
                 </ul>
             </div>
-            
         </div>
     </div>
 </footer>
