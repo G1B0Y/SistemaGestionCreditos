@@ -23,7 +23,7 @@
         </nav>
         <!-- Menú de Usuario -->
         <div class="user-menu">
-            <span class="user-name" onclick="toggleDropdown()">¡Hola Admin!</span>
+            <span class="user-name" id="adminName">¡Hola Admin!</span>
             <div class="dropdown-menu" id="dropdownMenu">
                 <a href="adminacount.html">Mi Cuenta</a>
                 <a href="../index.html">Cerrar Sesión</a>
@@ -74,6 +74,30 @@
     </footer>
 
     <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const idAdmin = sessionStorage.getItem("idUsuario"); // Obtener el ID del administrador desde la sesión
+
+            if (!idAdmin) {
+                alert("No se encontró un administrador en la sesión. Redirigiendo al login.");
+                window.location.href = "../login.html";
+                return;
+            }
+
+            // Obtener el nombre del administrador
+            try {
+                const response = await fetch(`http://localhost:8080/usuarios/datos/${idAdmin}`);
+                if (response.ok) {
+                    const adminData = await response.json();
+                    const adminName = document.getElementById("adminName");
+                    adminName.textContent = `¡Hola ${adminData.nombres}!`;
+                } else {
+                    throw new Error("No se pudo obtener el nombre del administrador.");
+                }
+            } catch (error) {
+                console.error("Error al cargar los datos del administrador:", error);
+            }
+        });
+
         function toggleDropdown() {
             var dropdown = document.getElementById("dropdownMenu");
             dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";

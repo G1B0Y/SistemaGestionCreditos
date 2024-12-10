@@ -213,6 +213,7 @@ p {
 /* Contenedor de mesas específico en usertable con formato cuadrado */
 .table-container {
     height: 200px;
+    padding-top: 50px;
     padding-bottom: 200px;
     display: flex;
     grid-template-columns: 1fr 1fr;
