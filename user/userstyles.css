@@ -213,7 +213,6 @@ p {
 /* Contenedor de mesas específico en usertable con formato cuadrado */
 .table-container {
     height: 200px;
-    padding-top: 50px;
     padding-bottom: 200px;
     display: flex;
     grid-template-columns: 1fr 1fr;
@@ -920,7 +919,6 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     background-color: #ffffff;
     border-radius: 8px;
-    border: 1px solid #ddd;
 }
 
 /* Tabla responsiva */
@@ -928,27 +926,6 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px; /* Espaciado inferior */
-}
-
-thead th {
-    position: sticky; /* Mantén los encabezados visibles al hacer scroll */
-    top: 0;
-    background-color: #f4f4f4;
-    z-index: 1;
-    padding: 10px;
-    font-weight: bold;
-    text-align: center;
-    border-bottom: 2px solid #ddd;
-}
-
-tbody td {
-    padding: 10px;
-    text-align: center;
-    border: 1px solid #ddd;
-}
-
-tbody tr:hover {
-    background-color: #f9f9f9;
 }
 
 th, td {
