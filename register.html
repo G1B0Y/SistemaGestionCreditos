@@ -9,7 +9,7 @@
 <body>
     <div class="register-container">
         <h1>Registro</h1>
-        <form action="#" method="post">
+        <form id="registerForm">
             <!-- Primera fila -->
             <div class="form-row">
                 <div class="form-column">
@@ -60,14 +60,15 @@
     </div>
     <script>
         // Manejar el envío del formulario
-        async function handleRegister(event) {
-            event.preventDefault(); // Evitar el envío automático del formulario
+        document.getElementById('registerForm').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Evitar el comportamiento predeterminado del formulario
 
             // Obtener los valores del formulario
             const dni = document.getElementById('dni').value.trim();
             const digitoVerificador = document.getElementById('digito-verificador').value.trim();
             const telefono = document.getElementById('telefono').value.trim();
             const fechaNacimiento = document.getElementById('fecha-nacimiento').value;
+            const direccion = document.getElementById('direccion').value.trim();
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
 
@@ -75,7 +76,7 @@
             const registerData = {
                 numeroDocumento: dni,
                 digitoVerificador: digitoVerificador,
-                direccion: "Dirección no especificada", // O agregar un campo de dirección si lo deseas
+                direccion: direccion,
                 telefono: telefono,
                 correo: email,
                 fechaNacimiento: fechaNacimiento,
@@ -106,7 +107,7 @@
                 console.error('Error al intentar registrar al cliente:', error);
                 alert('Hubo un problema con el registro. Inténtalo de nuevo más tarde.');
             }
-        }
+        });
     </script>
 </body>
 </html>
