@@ -910,8 +910,8 @@ body {
 /* Contenedor de la tabla */
 .table-container {
     width: 90%; /* Ajusta el tamaño para pantallas más pequeñas */
-    max-width: 1200px;
-    height: 400px; /* Tamaño máximo para la tabla */
+    max-width: 100%;
+    height: 1200px; /* Tamaño máximo para la tabla */
     overflow-y: auto;
     overflow-x: auto; /* Permite desplazamiento horizontal si es necesario */
     margin-top: 20px;
